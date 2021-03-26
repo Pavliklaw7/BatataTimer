@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Amazon Autocomplite</title>
+  <meta charset="utf-8">
+  <link href="css/style.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/simpleNotifyStyle.css">
+</head>
+<body class="popup">
+  <header class="header popup__header">
+    <a class="header__link">Sensalytic.io</a>
+  </header>
+  <main class="main popup__main">
+
+    <div id="intro" class="intro main__intro">
+      <p class="intro__text">Please, move in to LinkedIn or XING for start using extension</p>
+      <div class="intro__link-wrapper">
+        <a id="linkedinLink" href="#" class="intro__link">
+          <img
+            src="./images/linkedin-icon.svg"
+            alt="linkedin"
+            class="intro__img"
+          >
+        </a>
+        <a id="xingLink" href="#" class="intro__link">
+          <img
+            src="./images/xing-icon.svg"
+            alt="xing"
+            class="intro__img"
+          >
+        </a>
+      </div>
+    </div>
+
+    <form id="enterApiForm" method="POST" class="form main__form">
+      <label for="apiKey" class="form__label">
+        To continue working you need API Key
+        <img class="form__info" src="./images/info-icon.svg" alt="info-icon">
+        <div class="form__info-popup"></div>
+      </label>
+      <input
+        id="apiKey"
+        type="text"
+        class="form__input"
+        placeholder="Enter API Key"
+        required
+      >
+      <button id="readyBtn" type="submit" class="form__btn">Ready!</button>
+    </form>
+
+    <form id="generateForm" method="POST" class="form main__form">
+      <label for="jobDescr" class="form__label">
+        Let’s generate a message for this person
+      </label>
+      <input
+        id="jobDescr"
+        type="text"
+        class="form__input"
+        placeholder="Job description"
+        required
+      >
+      <button
+        id="generateBtn"
+        type="submit"
+        class="form__btn"
+      >
+        Generate!
+      </button>
+    </form>
+
+    <div id="loadingResult" class="form main__form">
+      <label for="jobDescr" class="form__label">
+        Please, wait while the text is generated
+      </label>
+      <input
+        id="jobDescrLoader"
+        type="text"
+        class="form__input"
+        disabled
+      >
+      <div class="ball-loader">
+        <div class="ball-loader-ball ball1"></div>
+        <div class="ball-loader-ball ball2"></div>
+        <div class="ball-loader-ball ball3"></div>
+      </div>
+      <button id="generateCancelBtn" type="submit" class="form__btn dark">Cancel</button>
+    </div>
+
+    <div id="generateResult" class="form main__form">
+      <div class="form__wrapper">
+        <p class="form__label">
+          Your message is ready.
+          Copy it or generate new one
+        </p>
+        <button
+          id="copyGeneratedTextBtn"
+          type="button"
+          class="form__copy-btn"
+        >
+          <img src="./images/copy-icon.svg" alt="copyText">
+          Copy
+        </button>
+      </div>
+      <textarea
+        name="generatedText"
+        id="generatedText"
+        class="form__textarea"
+      >
+      </textarea>
+      <button id="generateNewBtn" type="submit" class="form__btn">Generate new!</button>
+    </div>
+  </main>
+  <script src="js/core.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/simpleNotify.js"></script>
+  <script src="js/popup.js"></script>
+</body>
+</html>
