@@ -30,6 +30,8 @@ async function init() {
   const loadingResult = document.querySelector('#loadingResult');
   const apiKeyInput = document.querySelector('.form__input');
   const apiKeyInputValue = apiKeyInput.value;
+
+  console.log(apiKeyInputValue);
   const generateCancelBtn = document.querySelector('#generateCancelBtn');
   const copyGeneratedTextBtn = document.querySelector('#copyGeneratedTextBtn');
   const generatedText = document.querySelector('#generatedText');
@@ -81,11 +83,12 @@ async function init() {
     introPopup.classList.add(active);
   }
 
-  async function checkApiKey() {
+  async function checkApiKey(key) {
     const apiKey = await storageGet(apiKeyValue);
 
     console.log(apiKey);
-    if (apiKey === 'test') {
+
+    if (apiKey === 'test' || key !== undefined) {
       enterApiForm.classList.remove(active);
       await requestBackground(new ExtensionMessage(isOnTargetPage));
     } else {
@@ -142,8 +145,10 @@ async function init() {
 
   async function submitApiKey(e) {
     e.preventDefault();
+
     await storageSet({key: apiKeyValue, value: apiKeyInputValue});
+
+    checkApiKey(apiKeyInputValue);
     apiKeyInput.value = '';
-    checkApiKey();
   }
 }
