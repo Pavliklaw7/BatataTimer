@@ -28,10 +28,7 @@ async function init() {
   const generateBtn = document.querySelector('#generateBtn');
   const generateForm = document.querySelector('#generateForm');
   const loadingResult = document.querySelector('#loadingResult');
-  const apiKeyInput = document.querySelector('.form__input');
-  const apiKeyInputValue = apiKeyInput.value;
 
-  console.log(apiKeyInputValue);
   const generateCancelBtn = document.querySelector('#generateCancelBtn');
   const copyGeneratedTextBtn = document.querySelector('#copyGeneratedTextBtn');
   const generatedText = document.querySelector('#generatedText');
@@ -83,16 +80,16 @@ async function init() {
     introPopup.classList.add(active);
   }
 
-  async function checkApiKey(key) {
+  async function checkApiKey() {
     const apiKey = await storageGet(apiKeyValue);
 
     console.log(apiKey);
 
-    if (apiKey === 'test' || key !== undefined) {
+    if (apiKey === 'test') {
       enterApiForm.classList.remove(active);
       await requestBackground(new ExtensionMessage(isOnTargetPage));
     } else {
-      simpleNotify.notify("Api key is incorrect", "danger", 3000);
+      // simpleNotify.notify("Api key is incorrect", "danger", 3000);
       enterApiForm.classList.add(active);
     }
   };
@@ -146,9 +143,15 @@ async function init() {
   async function submitApiKey(e) {
     e.preventDefault();
 
+    const apiKeyInput = document.querySelector('.form__input');
+    const apiKeyInputValue = apiKeyInput.value;
+
     await storageSet({key: apiKeyValue, value: apiKeyInputValue});
 
-    checkApiKey(apiKeyInputValue);
+    console.log(apiKeyInputValue);
+
     apiKeyInput.value = '';
+
+    checkApiKey();
   }
 }
