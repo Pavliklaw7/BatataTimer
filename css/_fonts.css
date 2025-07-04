@@ -1,6 +1,6 @@
 @font-face {
-  font-family: 'Roboto';
-  src: url('../fonts/Roboto-Regular-webfont.woff') format('woff');
+  font-family: 'NotoSans';
+  src: url('../assets/fonts/NotoSansJP-Light.ttf') format('ttf');
   font-weight: normal;
   font-style: normal;
 }

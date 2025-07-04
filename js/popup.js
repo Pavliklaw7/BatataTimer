@@ -14,9 +14,6 @@ const {
 init();
 
 async function init() {
-
-  /* global Variables */
-
   let apiRequest;
   let genCount = 1;
 

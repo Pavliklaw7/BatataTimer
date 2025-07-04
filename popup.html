@@ -1,118 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <title>Amazon Autocomplite</title>
-  <meta charset="utf-8">
-  <link href="css/style.css" rel="stylesheet">
-  <link rel="stylesheet" href="css/simpleNotifyStyle.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Batata Timer</title>
+  <link rel="stylesheet" href="./css/style.css" />
 </head>
-<body class="popup">
-  <header class="header popup__header">
-    <a class="header__link">Sensalytic.io</a>
-  </header>
-  <main class="main popup__main">
 
-    <div id="intro" class="intro main__intro">
-      <p class="intro__text">Please, move in to LinkedIn or XING for start using extension</p>
-      <div class="intro__link-wrapper">
-        <a id="linkedinLink" href="#" class="intro__link">
-          <img
-            src="./images/linkedin-icon.svg"
-            alt="linkedin"
-            class="intro__img"
-          >
-        </a>
-        <a id="xingLink" href="#" class="intro__link">
-          <img
-            src="./images/xing-icon.svg"
-            alt="xing"
-            class="intro__img"
-          >
-        </a>
-      </div>
-    </div>
-
-    <form id="enterApiForm" method="POST" class="form main__form">
-      <label for="apiKey" class="form__label">
-        To continue working you need API Key
-        <img class="form__info" src="./images/info-icon.svg" alt="info-icon">
-        <div class="form__info-popup"></div>
-      </label>
-      <input
-        id="apiKey"
-        type="text"
-        class="form__input"
-        placeholder="Enter API Key"
-        required
-      >
-      <button id="readyBtn" type="submit" class="form__btn">Ready!</button>
-    </form>
-
-    <form id="generateForm" method="POST" class="form main__form">
-      <label for="jobDescr" class="form__label">
-        Let’s generate a message for this person
-      </label>
-      <input
-        id="jobDescr"
-        type="text"
-        class="form__input"
-        placeholder="Job description"
-        required
-      >
-      <button
-        id="generateBtn"
-        type="submit"
-        class="form__btn"
-      >
-        Generate!
+<body>
+  <div class="popup container">
+    <div class="background-selector">
+      <button id="prev-bg">
+        <div class="arrow-left"></div>
       </button>
-    </form>
-
-    <div id="loadingResult" class="form main__form">
-      <label for="jobDescr" class="form__label">
-        Please, wait while the text is generated
-      </label>
-      <input
-        id="jobDescrLoader"
-        type="text"
-        class="form__input"
-        disabled
-      >
-      <div class="ball-loader">
-        <div class="ball-loader-ball ball1"></div>
-        <div class="ball-loader-ball ball2"></div>
-        <div class="ball-loader-ball ball3"></div>
-      </div>
-      <button id="generateCancelBtn" type="submit" class="form__btn dark">Cancel</button>
+      <span id="bg-name">Rain</span>
+      <button id="next-bg">
+        <div class="arrow-right"></div>
+      </button>
     </div>
 
-    <div id="generateResult" class="form main__form">
-      <div class="form__wrapper">
-        <p class="form__label">
-          Your message is ready.
-          Copy it or generate new one
-        </p>
-        <button
-          id="copyGeneratedTextBtn"
-          type="button"
-          class="form__copy-btn"
-        >
-          <img src="./images/copy-icon.svg" alt="copyText">
-          Copy
-        </button>
-      </div>
-      <textarea
-        name="generatedText"
-        id="generatedText"
-        class="form__textarea"
-      >
-      </textarea>
-      <button id="generateNewBtn" type="submit" class="form__btn">Generate new!</button>
+    <div class="timer-circle">
+      <svg>
+        <circle cx="50%" cy="50%" r="45%"></circle>
+        <circle cx="50%" cy="50%" r="45%" id="progress"></circle>
+      </svg>
+      <div id="time-display">25:00</div>
     </div>
-  </main>
-  <script src="js/core.js"></script>
-  <script src="js/config.js"></script>
-  <script src="js/simpleNotify.js"></script>
-  <script src="js/popup.js"></script>
+
+    <div class="controls">
+      <button id="pause-btn">PAUSE</button>
+    </div>
+
+    <div class="bottom-panel">
+      <button id="sound-toggle">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512">
+            <path fill="currentColor"
+                d="M533.6 32.5C598.5 85.2 640 165.8 640 256s-41.5 170.7-106.4 223.5c-10.3 8.4-25.4 6.8-33.8-3.5s-6.8-25.4 3.5-33.8C557.5 398.2 592 331.2 592 256s-34.5-142.2-88.7-186.3c-10.3-8.4-11.8-23.5-3.5-33.8s23.5-11.8 33.8-3.5zM473.1 107c43.2 35.2 70.9 88.9 70.9 149s-27.7 113.8-70.9 149c-10.3 8.4-25.4 6.8-33.8-3.5s-6.8-25.4 3.5-33.8C475.3 341.3 496 301.1 496 256s-20.7-85.3-53.2-111.8c-10.3-8.4-11.8-23.5-3.5-33.8s23.5-11.8 33.8-3.5zm-60.5 74.5C434.1 199.1 448 225.9 448 256s-13.9 56.9-35.4 74.5c-10.3 8.4-25.4 6.8-33.8-3.5s-6.8-25.4 3.5-33.8C393.1 284.4 400 271 400 256s-6.9-28.4-17.7-37.3c-10.3-8.4-11.8-23.5-3.5-33.8s23.5-11.8 33.8-3.5zM301.1 34.8C312.6 40 320 51.4 320 64l0 384c0 12.6-7.4 24-18.9 29.2s-25 3.1-34.4-5.3L131.8 352 64 352c-35.3 0-64-28.7-64-64l0-64c0-35.3 28.7-64 64-64l67.8 0L266.7 40.1c9.4-8.4 22.9-10.4 34.4-5.3z" />
+        </svg>      
+      </button>
+      <span id="sessions-today">Today: 0</span>
+      <button id="settings-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+            <path fill="currentColor"
+                d="M495.9 166.6c3.2 8.7 .5 18.4-6.4 24.6l-43.3 39.4c1.1 8.3 1.7 16.8 1.7 25.4s-.6 17.1-1.7 25.4l43.3 39.4c6.9 6.2 9.6 15.9 6.4 24.6c-4.4 11.9-9.7 23.3-15.8 34.3l-4.7 8.1c-6.6 11-14 21.4-22.1 31.2c-5.9 7.2-15.7 9.6-24.5 6.8l-55.7-17.7c-13.4 10.3-28.2 18.9-44 25.4l-12.5 57.1c-2 9.1-9 16.3-18.2 17.8c-13.8 2.3-28 3.5-42.5 3.5s-28.7-1.2-42.5-3.5c-9.2-1.5-16.2-8.7-18.2-17.8l-12.5-57.1c-15.8-6.5-30.6-15.1-44-25.4L83.1 425.9c-8.8 2.8-18.6 .3-24.5-6.8c-8.1-9.8-15.5-20.2-22.1-31.2l-4.7-8.1c-6.1-11-11.4-22.4-15.8-34.3c-3.2-8.7-.5-18.4 6.4-24.6l43.3-39.4C64.6 273.1 64 264.6 64 256s.6-17.1 1.7-25.4L22.4 191.2c-6.9-6.2-9.6-15.9-6.4-24.6c4.4-11.9 9.7-23.3 15.8-34.3l4.7-8.1c6.6-11 14-21.4 22.1-31.2c5.9-7.2 15.7-9.6 24.5-6.8l55.7 17.7c13.4-10.3 28.2-18.9 44-25.4l12.5-57.1c2-9.1 9-16.3 18.2-17.8C227.3 1.2 241.5 0 256 0s28.7 1.2 42.5 3.5c9.2 1.5 16.2 8.7 18.2 17.8l12.5 57.1c15.8 6.5 30.6 15.1 44 25.4l55.7-17.7c8.8-2.8 18.6-.3 24.5 6.8c8.1 9.8 15.5 20.2 22.1 31.2l4.7 8.1c6.1 11 11.4 22.4 15.8 34.3zM256 336a80 80 0 1 0 0-160 80 80 0 1 0 0 160z" />
+        </svg>      
+      </button>
+    </div>
+
+    <audio id="background-audio" loop></audio>
+  </div>
+
+  <script src="script.js"></script>
 </body>
+
 </html>
