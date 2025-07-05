@@ -37,6 +37,8 @@ button {
   height:400px;
   font-family: 'NotoSans', Helvetica, sans-serif;
   color: rgba(255, 255, 255, var(--main-opacity));
+  background-position: center;
+  background-size: cover;
 }
 
 .popup__header {
@@ -71,9 +73,29 @@ body {
 }
 
 .container {
+  position: relative;
+  overflow: hidden;
   text-align: center;
   width: 100%;
   padding: 1rem;
+}
+
+.background-blur-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  filter: blur(2px);
+  opacity: 0.6;
+  z-index: 0;
+}
+
+.container > *:not(.background-blur-layer) {
+  position: relative;
+  z-index: 1;
 }
 
 .background-selector {
