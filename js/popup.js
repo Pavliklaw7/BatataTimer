@@ -1,154 +1,86 @@
-const {
-  goToLinkedin,
-  goToXing,
-  activeEviit,
-  apiKeyValue,
-  getApiKey,
-  isOnTargetPage,
-  active,
-  activeEviitGenerate,
-  displayIntro,
-} = config.keys;
+import {backgrounds, svgSoundOff, svgSoundOn} from './consts.js'
+
+let duration = 25 * 60; // 25 minutes
+let remaining = duration;
+let timerInterval = null;
+let isPaused = false;
+let currentBackground = 0;
+let sessionsToday = 0;
 
 
-init();
+const timeDisplay = document.getElementById("time-display");
+const progress = document.getElementById("progress");
+const pauseBtn = document.getElementById("pause-btn");
+const soundToggle = document.getElementById("sound-toggle");
+const soundIcon = document.getElementById("sound-icon");
+const audio = document.getElementById("background-audio");
+const bgName = document.getElementById("bg-name");
+const sessionsEl = document.getElementById("sessions-today");
 
-async function init() {
-  let apiRequest;
-  let genCount = 1;
+function updateTimeDisplay() {
+  const mins = Math.floor(remaining / 60).toString().padStart(2, "0");
+  const secs = (remaining % 60).toString().padStart(2, "0");
+  timeDisplay.textContent = `${mins}:${secs}`;
+  const percent = remaining / duration;
+  progress.style.strokeDashoffset = 565.48 * (1 - percent);
+}
 
-  const linkedinLink = document.querySelector('#linkedinLink');
-  const xingLink = document.querySelector('#xingLink');
-  const readyBtn = document.querySelector('.form__btn');
-  const introPopup = document.querySelector('#intro');
-  const enterApiForm = document.querySelector('#enterApiForm');
-  const generateBtn = document.querySelector('#generateBtn');
-  const generateForm = document.querySelector('#generateForm');
-  const loadingResult = document.querySelector('#loadingResult');
+function applyBackground(bg) {
+  document.querySelector('.background-blur-layer').style.backgroundImage = `url('${bg.image}')`;
+  bgName.textContent = bg.name;
+  audio.src = bg.audio;
+  if (!audio.muted) audio.play();
+}
 
-  const generateCancelBtn = document.querySelector('#generateCancelBtn');
-  const copyGeneratedTextBtn = document.querySelector('#copyGeneratedTextBtn');
-  const generatedText = document.querySelector('#generatedText');
-  const generateResult = document.querySelector('#generateResult');
-  const generateNewBtn = document.querySelector('#generateNewBtn');
+function switchBackground(dir) {
+  currentBackground = (currentBackground + dir + backgrounds.length) % backgrounds.length;
+  const bg = backgrounds[currentBackground];
+  applyBackground(bg);
+}
 
+function renderSoundIcon() {
+  const iconContainer = document.getElementById('sound-toggle');
+  iconContainer.innerHTML = audio.muted ? svgSoundOff : svgSoundOn;
+}
 
-  /* Init Functions */
+document.getElementById("prev-bg").addEventListener("click", () => switchBackground(-1));
+document.getElementById("next-bg").addEventListener("click", () => switchBackground(1));
 
-  checkApiKey();
+pauseBtn.addEventListener("click", () => {
+  isPaused = !isPaused;
+  pauseBtn.textContent = isPaused ? "START" : "PAUSE";
+});
 
-  /* Message Passing */
+soundToggle.addEventListener("click", () => {
+  audio.muted = !audio.muted;
+  renderSoundIcon()
+});
 
-  chrome.runtime.onMessage.addListener((request) => {
-    switch (request.message) {
-      case activeEviit:
-        switchToJobDescrInput();
-        break;
-      case activeEviitGenerate:
-        checkApiKey();
-        break;
-      case displayIntro:
-        displayIntroFunc();
-        break;
+function tick() {
+  if (!isPaused && remaining > 0) {
+    remaining--;
+    updateTimeDisplay();
+    if (remaining === 0) {
+      sessionsToday++;
+      sessionsEl.textContent = `Today: ${sessionsToday}`;
+      clearInterval(timerInterval);
     }
-  });
-
-  function openLinkedin() {
-    requestBackground(new ExtensionMessage(goToLinkedin));
-  }
-
-  function openXing() {
-    requestBackground(new ExtensionMessage(goToXing));
-  }
-
-  linkedinLink.addEventListener('click', () => openLinkedin());
-  xingLink.addEventListener('click', () => openXing());
-  readyBtn.addEventListener('click', (e) => submitApiKey(e))
-  generateBtn.addEventListener('click', (e) => generateText(e));
-  copyGeneratedTextBtn.addEventListener('click', () => copy());
-  generateNewBtn.addEventListener('click', (e) => generateNewText(e));
-
-  async function switchToJobDescrInput() {
-     enterApiForm.classList.remove(active);
-     generateForm.classList.add(active);
-  }
-
-  function displayIntroFunc() {
-    introPopup.classList.add(active);
-  }
-
-  async function checkApiKey() {
-    const apiKey = await storageGet(apiKeyValue);
-
-    console.log(apiKey);
-
-    if (apiKey === 'test') {
-      enterApiForm.classList.remove(active);
-      await requestBackground(new ExtensionMessage(isOnTargetPage));
-    } else {
-      // simpleNotify.notify("Api key is incorrect", "danger", 3000);
-      enterApiForm.classList.add(active);
-    }
-  };
-
-  function generateText(e) {
-    e.preventDefault();
-
-    const jobDescrValue = document.querySelector('#jobDescr').value;
-    const jobDescrLoader = document.querySelector('#jobDescrLoader');
-
-    jobDescrLoader.value = jobDescrValue;
-
-    generateForm.classList.remove(active);
-    generateResult.classList.remove(active);
-    loadingResult.classList.add(active);
-
-    apiRequest = setTimeout(() => {
-      getGeneratedText();
-    }, 5000) 
-
-    generateCancelBtn.addEventListener('click', () => {
-
-      clearTimeout(apiRequest)
-
-      generateForm.classList.add(active);
-      loadingResult.classList.remove(active);      
-    });
-  }
-
-
-  function copy() {
-    const  copyText = document.querySelector("#generatedText");
-    copyText.select();
-    document.execCommand("copy");
-    copyText.blur();
-    simpleNotify.notify("copied!", "attention", 2000);
-  }
-
-  function getGeneratedText() {
-    generatedText.value = `Test String ${genCount}`;
-    genCount++;
-    loadingResult.classList.remove(active);
-    generateResult.classList.add(active);
-  }
-
-
-  function generateNewText(e) {
-    generateText(e);
-  }
-
-  async function submitApiKey(e) {
-    e.preventDefault();
-
-    const apiKeyInput = document.querySelector('.form__input');
-    const apiKeyInputValue = apiKeyInput.value;
-
-    await storageSet({key: apiKeyValue, value: apiKeyInputValue});
-
-    console.log(apiKeyInputValue);
-
-    apiKeyInput.value = '';
-
-    checkApiKey();
   }
 }
+
+function startTimer() {
+  updateTimeDisplay();
+  if (!timerInterval) {
+    timerInterval = setInterval(tick, 1000);
+  }
+  applyBackground(backgrounds[currentBackground]);
+}
+
+// startTimer();
+
+function init() {
+  applyBackground(backgrounds[currentBackground]);
+  renderSoundIcon()
+}
+
+init()
