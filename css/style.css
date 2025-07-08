@@ -39,6 +39,7 @@ button {
   color: rgba(255, 255, 255, var(--main-opacity));
   background-position: center;
   background-size: cover;
+  background-color: #000;
 }
 
 .popup__header {
@@ -89,7 +90,7 @@ body {
   background-size: cover;
   background-position: center;
   filter: blur(2px);
-  opacity: 0.6;
+  opacity: 0.8;
   z-index: 0;
 }
 
@@ -100,9 +101,9 @@ body {
 
 .background-selector {
   display: flex;
-  justify-content: center;
-  gap: 1rem;
+  justify-content: space-between;
   align-items: center;
+  width: 170px;
   padding: 10px;
 }
 
@@ -118,6 +119,25 @@ body {
   height: 200px;
   margin: 0 auto;
 }
+
+#timer-circle-controls {
+  position: absolute;
+  display: none;
+  justify-content: space-between;
+  align-items: center;
+  width: 143%;
+  top: 45%;
+  left: -43px;
+}
+
+#timer-circle-controls.visible {
+  display: flex;
+}
+
+#timer-circle-controls button {
+  color: #fff;
+}
+
 
 svg {
   width: 100%;
@@ -146,12 +166,38 @@ circle {
   font-size: 2em;
 }
 
+#control-btn {
+  width: 89px;
+}
+
+.controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
 .controls button {
+  height: 36px;
   background: transparent;
   border: 1px solid white;
   border-radius: 20px;
   padding: 10px 20px;
   cursor: pointer;
+  color: inherit;
+}
+
+.controls #reset-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  padding: 7px;
+  border: 1px solid rgb(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.5);
+}
+
+#reset-btn.active {
   color: inherit;
 }
 
@@ -165,8 +211,8 @@ circle {
 }
 
 .bottom-panel button {
-  width: 24px;
-  height: 24px;
+  width: 32px;
+  height: 32px;
   color: inherit;
 }
 
